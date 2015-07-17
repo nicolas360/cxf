@@ -1,7 +1,6 @@
 package com.zhuc.cxf.t1.restful;
 
 import com.google.common.collect.Lists;
-import org.eclipse.jetty.util.ajax.JSON;
 
 import java.util.List;
 
