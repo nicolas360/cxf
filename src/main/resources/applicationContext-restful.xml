@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+    	   http://cxf.apache.org/jaxrs
+    	   http://cxf.apache.org/schemas/jaxrs.xsd">
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.zhuc">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+
+	<bean id="restHelloWorldImpl" class="com.zhuc.cxf.t1.restful.RestHelloWorldImpl" />
+
+	<bean id="helloInInterceptor"  class="com.zhuc.cxf.t1.restful.HelloInInterceptor"/>
+	<bean id="helloOutInterceptor" class="com.zhuc.cxf.t1.restful.HelloOutInterceptor"/>
+
+	<jaxrs:server id="restHelloWorld" address="/restful">
+
+		<jaxrs:serviceBeans>
+			<ref bean="restHelloWorldImpl" />
+		</jaxrs:serviceBeans>
+
+		<!--拦截器，请求和响应-->
+		<jaxrs:inInterceptors>
+			<ref bean="helloInInterceptor"/>
+		</jaxrs:inInterceptors>
+
+		<jaxrs:outInterceptors>
+			<ref bean="helloOutInterceptor"/>
+		</jaxrs:outInterceptors>
+
+		<jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider" />
+		</jaxrs:providers>
+
+
+		<jaxrs:extensionMappings>
+			<entry key="json" value="application/json" />
+			<entry key="xml" value="application/xml" />
+		</jaxrs:extensionMappings>
+	</jaxrs:server>
+
+</beans>
